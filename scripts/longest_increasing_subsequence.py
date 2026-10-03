@@ -1,10 +1,14 @@
+from bisect import bisect_left
+
+
 class Solution:
     def lengthOfLIS(self, nums) -> int:
-        n = len(nums)
-        dp = [1] * n
-        for i in range(n):
-            for j in range(i):
-                # dp[i] < dp[j] + 1: only +1 when j has larger or equal size of subsequence
-                if nums[i] > nums[j] and dp[i] < dp[j] + 1:
-                    dp[i] = dp[j] + 1
-        return max(dp)
+        # tails[i] is the smallest tail of any increasing subsequence of length i + 1.
+        tails = []
+        for number in nums:
+            index = bisect_left(tails, number)
+            if index == len(tails):
+                tails.append(number)
+            else:
+                tails[index] = number
+        return len(tails)
